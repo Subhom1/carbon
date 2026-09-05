@@ -409,7 +409,6 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>((props, ref) => {
   }, []);
 
   const lastStartValue = useRef('');
-  const lastCommittedTypedValue = useRef('');
   const calendarRef = useRef<Instance>(null);
 
   interface CalendarCloseEvent {
@@ -805,11 +804,6 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>((props, ref) => {
 
       const { value: inputValue } = event.target;
       if (!inputValue) {
-        lastCommittedTypedValue.current = '';
-        return;
-      }
-
-      if (lastCommittedTypedValue.current === inputValue) {
         return;
       }
 
@@ -836,7 +830,6 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>((props, ref) => {
         calendar.formatDate(parsedDate, calendar.config.dateFormat) ===
           inputValue
       ) {
-        lastCommittedTypedValue.current = inputValue;
         calendar.setDate(parsedDate, true);
       }
     }
