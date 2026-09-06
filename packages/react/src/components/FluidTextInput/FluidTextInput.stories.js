@@ -8,14 +8,10 @@
 import React from 'react';
 import FluidTextInput from '../FluidTextInput';
 import FluidTextInputSkeleton from './FluidTextInput.Skeleton';
-import {
-  ToggletipLabel,
-  Toggletip,
-  ToggletipButton,
-  ToggletipContent,
-} from '../Toggletip';
+import { Toggletip, ToggletipButton, ToggletipContent } from '../Toggletip';
 import { Information } from '@carbon/icons-react';
 import './test.scss';
+import './fluid-text-input-story.scss';
 import mdx from './FluidTextInput.mdx';
 
 export default {
@@ -34,9 +30,15 @@ export default {
   },
 };
 
-const ToggleTip = (
-  <>
-    <ToggletipLabel>Label</ToggletipLabel>
+export const Default = ({ defaultWidth, ...textInputArgs }) => (
+  <div style={{ width: defaultWidth }}>
+    <FluidTextInput {...textInputArgs} />
+  </div>
+);
+
+const LabelToggletip = () => (
+  // Keep the toggletip outside `labelText`; interactive content is invalid in labels.
+  <span className="fluid-text-input-story__toggletip">
     <Toggletip align="top-left">
       <ToggletipButton label="Show information">
         <Information />
@@ -45,7 +47,7 @@ const ToggleTip = (
         <p>Additional field information here.</p>
       </ToggletipContent>
     </Toggletip>
-  </>
+  </span>
 );
 
 const sharedArgTypes = {
@@ -84,12 +86,6 @@ const widthArgType = {
   control: { type: 'range', min: 300, max: 800, step: 50 },
 };
 
-export const Default = ({ defaultWidth, ...textInputArgs }) => (
-  <div style={{ width: defaultWidth }}>
-    <FluidTextInput {...textInputArgs} />
-  </div>
-);
-
 Default.args = {
   ...sharedArgs,
   defaultWidth: 300,
@@ -105,8 +101,9 @@ Default.parameters = {
 };
 
 export const DefaultWithToggletip = ({ defaultWidth, ...textInputArgs }) => (
-  <div style={{ width: defaultWidth }}>
-    <FluidTextInput {...textInputArgs} labelText={ToggleTip} />
+  <div className="fluid-text-input-story" style={{ width: defaultWidth }}>
+    <LabelToggletip />
+    <FluidTextInput {...textInputArgs} labelText="Label" />
   </div>
 );
 
