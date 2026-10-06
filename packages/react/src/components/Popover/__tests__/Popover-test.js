@@ -7,6 +7,7 @@
 
 import { render, screen } from '@testing-library/react';
 import React, { forwardRef } from 'react';
+import { ClassPrefix } from '../../ClassPrefix';
 import { Popover, PopoverContent } from '../../Popover';
 import userEvent from '@testing-library/user-event';
 import { waitForPosition } from '../../ListBox/test-helpers';
@@ -57,6 +58,38 @@ describe('Popover', () => {
       </Popover>
     );
     expect(container.firstChild).toHaveAttribute('data-testid', 'test');
+  });
+
+  it('should only read caret custom properties when relevant inputs change', () => {
+    const getComputedStyle = jest.spyOn(window, 'getComputedStyle');
+
+    const renderPopover = ({
+      buttonText = 'Settings',
+      prefix: classPrefix = 'cds',
+    } = {}) => (
+      <ClassPrefix prefix={classPrefix}>
+        <Popover open={false} caret>
+          <button type="button">{buttonText}</button>
+          <PopoverContent>test</PopoverContent>
+        </Popover>
+      </ClassPrefix>
+    );
+
+    try {
+      const { rerender } = render(renderPopover());
+
+      expect(getComputedStyle).toHaveBeenCalledTimes(1);
+
+      rerender(renderPopover({ buttonText: 'Different settings' }));
+
+      expect(getComputedStyle).toHaveBeenCalledTimes(1);
+
+      rerender(renderPopover({ prefix: 'test' }));
+
+      expect(getComputedStyle).toHaveBeenCalledTimes(2);
+    } finally {
+      getComputedStyle.mockRestore();
+    }
   });
 
   describe('PopoverContent', () => {
